@@ -35,14 +35,16 @@ static int proove_callback(bitbuffer_t *bitbuffer) {
     char time_str[LOCAL_TIME_BUFLEN];
 
     /* Reject codes of wrong length */
-    if (bitbuffer->bits_per_row[1] != 64)
+    if (bitbuffer->bits_per_row[1] != 72 &&
+	bitbuffer->bits_per_row[1] != 64 )
       return 0;
 
     bitbuffer_t databits = {0};
-    unsigned pos = bitbuffer_manchester_decode(bitbuffer, 1, 0, &databits, 64);
+    unsigned pos = bitbuffer_manchester_decode(bitbuffer, 1, 0, &databits,
+					       bitbuffer->bits_per_row[1]);
 
     /* Reject codes when Manchester decoding fails */
-    if (pos != 64)
+    if (pos != bitbuffer->bits_per_row[1])
       return 0;
 
     /* bitbuffer_print(&databits); */
